@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Store fb photos of you!</title>
+
+</head>
+
+<body>
+<script th:replace="fragments/scripts :: fb-sign-in"></script>
+
+<!-- Javascript SDK -->
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=1344964768940939&autoLogAppEvents=1"></script>
+
+<script type="application/javascript">
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+            console.log(response.authResponse.accessToken);
+        }
+    });
+</script>
+
+<div class="fb-login-button" data-size="large" data-button-type="continue_with" data-auto-logout-link="false" data-use-continue-as="false"></div>
+
+</body>
+</html>
