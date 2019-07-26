@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your photos</title>
+
+    <script crossorigin="anonymous"
+            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+            src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+<script src="js/fb-init.js"></script>
+<body>
+
+    <p th:text="'Token: ' + ${fbToken}"></p>
+    <p th:text="'Permissions are valid: ' + ${fbToken} ? 'true' : 'false'"></p>
+
+    <button id="login">Login with Facebook</button>
+    <button style="display:none;" id="logout">Logout</button>
+    <div id="status"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+    <script src="js/fb-logic.js"></script>
+</body>
+</html>

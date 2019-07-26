@@ -4,46 +4,15 @@
     <meta charset="UTF-8">
     <title>Login via FB</title>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
-
-    <script crossorigin="anonymous"
-            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-            src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
+<script src="js/fb-init.js"></script>
 <body>
-<script>
-    window.fbAsyncInit = function() {
-        FB.init({
-                appId: '1344964768940939',
-                version: 'v3.3',
-                autoLogAppEvents: true,
-                xfbml: true
-        });
-        //checkLoginState();
-    };
 
-    function checkLoginState() {
-        FB.getLoginStatus(function (response) {
+    <button id="login">Login with Facebook</button>
+    <button style="display:none;" id="logout">Logout</button>
+    <div id="status"></div>
 
-            if (response.status === 'connected') {
-                console.log(response);
-                window.location.href = "/photos&fbToken=" + response.authResponse.accessToken;
-            } else if (response.status === 'not_authorized') {
-                console.log('not connected to app');
-                //$('fb-login-button').css('display','unset');
-            } else {
-                console.log('not logged in FB');
-                //$('fb-login-button').css('display','unset');
-            }
-
-        });
-    }
-</script>
-<script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
-
-<p>Override redirect to your <a href="/photos">photos</a></p>
-
-<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
+<script src="js/fb-logic.js"></script>
 </body>
 </html>
