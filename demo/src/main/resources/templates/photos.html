@@ -12,7 +12,9 @@
 <body>
 
     <p th:text="'Token: ' + ${fbToken}"></p>
-    <p th:text="'Permissions are valid: ' + ${fbToken} ? 'true' : 'false'"></p>
+    <p th:text="'Token is fine: ' + ${isTokenValid.booleanValue()}"></p>
+    <p th:text="'userDto.id: ' + ${userDto.getId()}"></p>
+    <p th:text="'userDto.name: ' + ${userDto.getName()}"></p>
 
     <button id="login">Login with Facebook</button>
     <button style="display:none;" id="logout">Logout</button>
