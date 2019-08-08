@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.machava.demo.dtos.PhotoDto;
 import com.machava.demo.dtos.UserDto;
 
 import kong.unirest.HttpResponse;
@@ -25,7 +26,7 @@ import kong.unirest.UnirestException;
 @Service
 public class FbApi {
     String invalidToken = "EAATHPQNJw4sBAEmwEds3NNiOA8vkBLH3dx0ldeS9nUeu879b3Gw9xsSHUIBXuZCNstmVGPQZA6ORoZCWjIZCRbJ06XuZC7vCAZBWdHPxDTsOxLn5afaoS1c1yfDYU4QOOruDax3ZBrQeNDZBJ84ITvD6SHE5ZCybSuY4aOyaZCs0uP81isK3Iwe8PJLd1yZC3CbDZAoZD";
-    String validToken = "EAATHPQNJw4sBAI018NoKnpVAH0onaHFiqdw83FFVt9kzb7sOminLLrYgS41nYfJf09xIMVbQ4ofb3TiHR9jYM4FCOdDvKf6oYOGcJpdCZA5H91cGYPd48qZAZC1M6CEVciA1TAwypnsk1lhZB922yLHBVCUiFN0yu5Ods0TlQ8c6sqkNgB24DNPskXt5YEoZD";
+    String validToken = "EAATHPQNJw4sBAPMaaF73nG0QvYNU1xTKWoTCyQcs1J0WnJ2v1t8XdWsmmZCHkPW5pIBbRg4bwldEAhpkSdb0eJ0n9fqPrp5r5D2FcDDDxFlMCu4CefZADX9LAn5hDfPRIjcr8VtyEGZBfj1s71o0ARgSBA0LbB3X0O22xkBs2hBLYBOZCZAgOMAWvzXa8gCCnahTRkV86fAZDZD";
 
 
     private static String apiUrl = "https://graph.facebook.com/v3.3/";
@@ -47,6 +48,7 @@ public class FbApi {
                     .asJson();
         } catch (UnirestException e) {
             e.printStackTrace();
+            return null;
         }
 
         assert resposne != null;
@@ -63,7 +65,7 @@ public class FbApi {
         boolean permissions = scopesList.containsAll(requiredPermissionsList);
 
         if (responseObject.has("error")) {
-            System.out.println(responseObject.getJSONObject("error").getString("message"));
+            System.out.println(responseObject.getJSONObject("error").getString("message")); // TODO change outputs to exceptions
             return false;
         } else if (!isTokenValid) {
             System.out.println("Token is invalid");
@@ -112,6 +114,37 @@ public class FbApi {
     public void testUserInfo() throws IOException {
         assertNotNull(getUserInfo(validToken).getId());
         assertNotNull(getUserInfo(validToken).getName());
+    }
+
+    static List<PhotoDto> getUserPhotos(String fbToken) throws IOException { // TODO change to list
+
+        HttpResponse<JsonNode> resposne = null;
+
+        try {
+            resposne = Unirest.get(apiUrl + "me/photos")
+                    .queryString("fields", "id,name,picture,link")
+                    .queryString("access_token", fbToken)
+                    .asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        assert resposne != null;
+        JSONArray responseArray = resposne.getBody().getObject().getJSONArray("data");
+
+        ObjectMapper mapper = new ObjectMapper();
+        List<PhotoDto> photoDtoList = mapper.readValue(String.valueOf(responseArray), new TypeReference<List<PhotoDto>>() {});
+
+        // debug
+        photoDtoList.forEach(System.out::println);
+
+        return photoDtoList;
+    }
+
+    @Test
+    public void testGetUserPhotos() throws IOException {
+        assertNotNull(getUserPhotos(validToken));
     }
 
 }
