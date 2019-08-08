@@ -16,6 +16,6 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserDto {
-    public String id;
-    public String name;
+    private String id;
+    private String name;
 }
