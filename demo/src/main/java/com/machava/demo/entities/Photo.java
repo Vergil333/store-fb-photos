@@ -1,5 +1,9 @@
 package com.machava.demo.entities;
 
+import javax.persistence.Entity;
+
+import org.hibernate.annotations.DynamicUpdate;
+
 import com.machava.demo.dtos.PhotoDto;
 
 import lombok.AllArgsConstructor;
