@@ -19,13 +19,13 @@ import lombok.Setter;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PhotoDto {
-    private String id;
+    private String fbId;
     private String picture;
     private String link;
 
     public Photo toEntity() {
         return Photo.builder()
-                .id(this.getId())
+                .fbId(this.getFbId())
                 .picture(this.getPicture())
                 .link(this.getLink())
                 .build();

@@ -1,6 +1,8 @@
 package com.machava.demo.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -20,13 +22,17 @@ import lombok.Setter;
 @Setter
 @DynamicUpdate
 public class Photo {
-    private String id;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+    private String fbId;
     private String picture;
     private String link;
 
     public PhotoDto toDto() {
         return PhotoDto.builder()
-                .id(this.getId())
+                .fbId(this.getFbId())
                 .picture(this.getPicture())
                 .link(this.getLink())
                 .build();
