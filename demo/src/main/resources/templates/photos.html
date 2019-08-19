@@ -16,8 +16,10 @@
 
     <p th:text="'Token: ' + ${fbToken}"></p>
     <p th:text="'Token is fine: ' + ${isTokenValid.booleanValue()}"></p>
-    <p th:text="'userDto.id: ' + ${userDto.getId()}"></p>
+    <p th:text="'userDto.id: ' + ${userDto.getFbId()}"></p>
     <p th:text="'userDto.name: ' + ${userDto.getName()}"></p>
+    <p th:text="'userDto.gender: ' + ${userDto.getGender()}"></p>
+    <img th:src="${userDto.getPicture()}">
 
     <button id="login">Login with Facebook</button>
     <button style="display:none;" id="logout">Logout</button>

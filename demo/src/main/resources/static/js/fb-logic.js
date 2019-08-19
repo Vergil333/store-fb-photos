@@ -38,7 +38,7 @@ function facebookLoginByDialog()
 function fetchUserProfile()
 {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me?fields=id,name,email,gender,birthday', function(response) {
+    FB.api('/me?fields=id,name,gender,picture', function(response) {
         console.log(response);
         console.log('Successful login for: ' + response.name);
         var clientToken = FB.getAuthResponse()['accessToken'];
