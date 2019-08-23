@@ -21,7 +21,7 @@ public class Web {
         model.addAttribute("isTokenValid", permissionsOk);
         if (permissionsOk) {
         }
-        model.addAttribute("userDto", FbApi.getUserInfo(fbToken));
+        model.addAttribute("userDto", FbApi.getUserDetails(fbToken));
         model.addAttribute("fbToken", fbToken);
         return "photos";
     }
