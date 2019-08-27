@@ -4,8 +4,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -26,7 +24,7 @@ public class TestFbApi {
     }
 
     @Test
-    public void testUserDetails() throws IOException { // todo add unsuccessful test
+    public void testUserDetails() throws Exception { // todo add unsuccessful test
         assertNotNull(FbApi.getUserDetails(validToken).getId());
         assertNotNull(FbApi.getUserDetails(validToken).getName());
         assertNotNull(FbApi.getUserDetails(validToken).getGender());
@@ -34,7 +32,7 @@ public class TestFbApi {
     }
 
     @Test
-    public void testGetUserPhotos() throws IOException {
+    public void testGetUserPhotos() throws Exception {
         assertNotNull(FbApi.getUserPhotos(validToken));
     }
 

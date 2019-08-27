@@ -1,11 +1,12 @@
 package com.machava.demo.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NaturalId;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,10 +24,14 @@ import lombok.Setter;
 public class Photo {
 
     @Id
+    @NaturalId
     private Long id;
     @ManyToOne
     private User user;
-    @Lob
+    private String name;
+    private String link;
     private String picture;
+    @Column(length = 330)
+    private String reactions;
 
 }
