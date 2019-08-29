@@ -25,14 +25,7 @@ import kong.unirest.UnirestException;
 @Service
 public class FbApi {
 
-    // long lived access token:
-    // /oauth/access_token?grant_type=fb_exchange_token&client_id=1344964768940939&client_secret=4821c6cf25b5abb3f0211025ee698e22&fb_exchange_token=EAATHPQNJw4sBALcUpccDfmZBFC3ZCFKaUZCH1rBg2FYDdMahiBZAiw8AjsZAguJ7RV0Om9ZAuf1008oC65ds6coxjIsZCxPkYEolQl2EDvsMvELcn9zfFgg2u2BNVakvoGwVQ4OMVoXKw2jawN1R77YCOCee1NPrlZBLbHinGgZB5IQ0wZBGMVFCm1uuOzre6kuB0ZD
-
     private static String apiUrl = "https://graph.facebook.com/v3.3/";
-
-    // PhotoDto me/photos?fields=id,picture.width(800)
-    // UserDto me?fields=id,name
-    // Debug FbToken debug_token?input_token={{FbToken}}&access_token=1344964768940939|_c_00YpU-mhtlroMpAdN2ftV_w8
 
     public static Boolean verifyToken(String fbToken) {
 
@@ -79,6 +72,11 @@ public class FbApi {
     public static User getUserDetails(String fbToken) throws Exception {
 
         User user;
+
+        if (!FbApi.verifyToken(fbToken)) {
+            throw new FbException("Token is invalid.");
+        }
+
         HttpResponse<JsonNode> response = null;
 
         try {
@@ -140,23 +138,8 @@ public class FbApi {
 
             photoList.forEach(photo -> {
                 List<ReactionDto> reactions = getPhotoReactions(fbToken, photo.getId());
-                System.out.println("Reactions List: " + reactions);
-                photo.setReactions(reactions.toString());
+                photo.setReactions(reactions);
             });
-
-            // Try to map result via builder
-            /*for (int i = 0; i < responseDataArray.length(); i++) {
-                JSONObject jsonPhoto = responseDataArray.getJSONObject(i);
-                String reactions = getPhotoReactions(fbToken, jsonPhoto.getLong("id")).toString();
-                Photo photo = Photo.builder()
-                        .id(jsonPhoto.getLong("id"))
-                        //.name(jsonPhoto.getString("name"))
-                        .link(jsonPhoto.getString("link"))
-                        .picture(jsonPhoto.getString("picture"))
-                        .reactions(reactions)
-                        .build();
-                photoList.add(photo);
-            }*/
 
             return photoList;
         } else {

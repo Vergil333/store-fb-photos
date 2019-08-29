@@ -1,5 +1,7 @@
 package com.machava.demo.dtos;
 
+import java.io.Serializable;
+
 import javax.persistence.Enumerated;
 import javax.persistence.Lob;
 
@@ -19,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ReactionDto {
+public class ReactionDto implements Serializable {
 
     @Enumerated
     private EReactionType type;

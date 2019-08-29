@@ -15,7 +15,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ApiTemplateDto {
+public class UserDto {
+
     private Long id;
-    private String accessToken;
+    private String name;
+    private String gender;
+    private String picture;
+
 }

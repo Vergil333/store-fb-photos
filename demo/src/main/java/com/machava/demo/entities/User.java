@@ -11,6 +11,9 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NaturalId;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.machava.demo.dtos.UserDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +27,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @DynamicUpdate
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User {
 
     @Id
@@ -34,5 +38,14 @@ public class User {
     private String picture;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     private List<Photo> photos;
+
+    public UserDto toDto() {
+        return UserDto.builder()
+                .id(getId())
+                .name(getName())
+                .gender(getGender())
+                .picture(getPicture())
+                .build();
+    }
 
 }
