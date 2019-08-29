@@ -16,6 +16,9 @@ Lombok
 FB JavaScript SDK  
 Hibernate (in-memory H2 database)
 
-Database login:  
-user: demo.user  
-password: demo.password  
+H2 database:  
+link: https://localhost:8090/h2-console/    
+user: SA  
+password: {empty}  
+
+FB Javascript SDK requires website to be secured (HTTPS) so you have to create your self-signed certificate and place localhost.p12 into /resources folder (or disable security for whole project as I did for h2 console).
