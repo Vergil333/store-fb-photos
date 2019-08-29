@@ -19,3 +19,7 @@ docker start demo-database
 Database login:
 user: demo.user
 password: demo.password
+
+Tasks:
+- create functional REST API by [this task](https://github.com/Vergil333/store-fb-photos/wiki/Task)
+- achieve previous task via web application
