@@ -4,16 +4,33 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.machava.demo.dtos.ReactionDto;
+import com.machava.demo.entities.Photo;
+import com.machava.demo.enums.EReactionType;
+
+import kong.unirest.HttpResponse;
+import kong.unirest.JsonNode;
+import kong.unirest.Unirest;
+import kong.unirest.UnirestException;
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
 public class FbApiManager {
+
+    public static String apiUrl = "https://graph.facebook.com/v3.3/";
 
     public static byte[] convertImageToByte(String imageUrl) {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
@@ -25,6 +42,72 @@ public class FbApiManager {
             throw new IllegalArgumentException("Could not download image: " + e +
                     "Given url: " + imageUrl);
         }
+    }
+
+    public static List<Photo> mapPhotoResponseToList(JSONObject responseObject, String fbToken) {
+        List<Photo> photoList = new ArrayList<>();
+        JSONArray responseDataArray = responseObject.getJSONArray("data");
+
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            photoList = mapper.readValue(String.valueOf(responseDataArray), new TypeReference<List<Photo>>() {});
+        } catch (IOException e) {
+            System.out.println("Error parsing JSON Array to List<PhotoDto>: " + e);
+        }
+
+        photoList.forEach(photo -> {
+            List<ReactionDto> reactions = getPhotoReactions(fbToken, photo.getId());
+            photo.setReactions(reactions);
+        });
+
+        return photoList;
+    }
+
+    private static List<ReactionDto> getPhotoReactions(String fbToken, Long photoId) {
+
+        List<ReactionDto> reactionDtoList = new ArrayList<>();
+
+        List<EReactionType> eReactionTypesList = Arrays.asList(EReactionType.values());
+        eReactionTypesList.forEach(reaction -> {
+            try {
+                Long reactionSummary = getReactionSummary(fbToken, photoId, reaction);
+                ReactionDto reactionDto = new ReactionDto(reaction, reactionSummary);
+                reactionDtoList.add(reactionDto);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return reactionDtoList;
+    }
+
+    private static Long getReactionSummary(String fbToken, Long photoId, EReactionType reactionType) throws Exception {
+
+        HttpResponse<JsonNode> response = null;
+        try {
+            response = Unirest.get(apiUrl + photoId + "/reactions")
+                    .queryString("type", reactionType)
+                    .queryString("summary", "total_count")
+                    .queryString("access_token", fbToken)
+                    .asJson();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
+
+        JSONObject responseObject = response.getBody().getObject();
+
+        if (responseObject.has("error")) {
+            throw catchFbError(response);
+        } else if (response.getStatus() == 200) {
+            return responseObject.getJSONObject("summary").getLong("total_count");
+        } else {
+            throw new Exception("Unexpected error has occurred.");
+        }
+    }
+
+    public static FbException catchFbError(HttpResponse<JsonNode> response) {
+        return new FbException("Response code: " + response.getStatusText() +
+                "FB error says: " + response.getBody().getObject().getJSONObject("error").getString("message"));
     }
 
 }
