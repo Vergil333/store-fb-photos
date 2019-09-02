@@ -3,7 +3,6 @@ package com.machava.demo.dtos;
 import java.io.Serializable;
 
 import javax.persistence.Enumerated;
-import javax.persistence.Lob;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -25,7 +24,6 @@ public class ReactionDto implements Serializable {
 
     @Enumerated
     private EReactionType type;
-    @Lob
     private Long summary;
 
 }

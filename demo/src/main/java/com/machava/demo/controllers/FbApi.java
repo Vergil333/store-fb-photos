@@ -35,7 +35,6 @@ public class FbApi {
             e.printStackTrace();
         }
 
-        assert response != null;
         JSONObject responseObject = response.getBody().getObject().getJSONObject("data");
 
         boolean isTokenValid = responseObject.getBoolean("is_valid");

@@ -1,15 +1,14 @@
 package com.machava.demo.entities;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.NaturalId;
@@ -40,8 +39,8 @@ public class Photo {
     private String name;
     private String link;
     private String picture;
-    @Lob
-    private byte[] reactions;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "photo")
+    private List<Reaction> reactions;
 
     public PhotoDto toDto() {
         return PhotoDto.builder()
@@ -49,41 +48,15 @@ public class Photo {
                 .name(getName())
                 .link(getLink())
                 .picture(getPicture())
-                .reactions(getReactions())
+                .reactions(reactionsToDto())
                 .build();
     }
 
-    public void setReactions(List<ReactionDto> reactions) {
-        this.reactions = serializeReactions(reactions);
-    }
+    private List<ReactionDto> reactionsToDto() {
+        List<ReactionDto> reactionDtoList = new ArrayList<>();
 
-    public List<ReactionDto> getReactions() {
-        return deserializeReactions(reactions);
-    }
-
-    private static byte[] serializeReactions(List<ReactionDto> reactionDtoList) {
-        byte[] reactionsInString = null;
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(reactionDtoList);
-            oos.flush();
-            reactionsInString = baos.toByteArray();
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-
-        return reactionsInString;
-    }
-
-    @SuppressWarnings("unchecked")
-    private static List<ReactionDto> deserializeReactions(byte[] reactionsInString) {
-        List<ReactionDto> reactionDtoList = null;
-        byte[] reactionsInBytes = reactionsInString;
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(reactionsInBytes)) {
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            reactionDtoList = (List<ReactionDto>) ois.readObject();
-        } catch (Exception e) {
-            System.out.println(e);
+        for (Reaction reaction : this.reactions) {
+            reactionDtoList.add(reaction.toDto());
         }
 
         return reactionDtoList;

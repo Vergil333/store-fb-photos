@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.machava.demo.dtos.ReactionDto;
 import com.machava.demo.entities.Photo;
+import com.machava.demo.entities.Reaction;
 import com.machava.demo.enums.EReactionType;
 
 import kong.unirest.HttpResponse;
@@ -56,23 +56,23 @@ public class FbApiManager {
         }
 
         photoList.forEach(photo -> {
-            List<ReactionDto> reactions = getPhotoReactions(fbToken, photo.getId());
+            List<Reaction> reactions = getPhotoReactions(fbToken, photo);
             photo.setReactions(reactions);
         });
 
         return photoList;
     }
 
-    private static List<ReactionDto> getPhotoReactions(String fbToken, Long photoId) {
+    private static List<Reaction> getPhotoReactions(String fbToken, Photo photo) {
 
-        List<ReactionDto> reactionDtoList = new ArrayList<>();
+        List<Reaction> reactionDtoList = new ArrayList<>();
 
         List<EReactionType> eReactionTypesList = Arrays.asList(EReactionType.values());
-        eReactionTypesList.forEach(reaction -> {
+        eReactionTypesList.forEach(reactionType -> {
             try {
-                Long reactionSummary = getReactionSummary(fbToken, photoId, reaction);
-                ReactionDto reactionDto = new ReactionDto(reaction, reactionSummary);
-                reactionDtoList.add(reactionDto);
+                Long reactionSummary = getReactionSummary(fbToken, photo.getId(), reactionType);
+                Reaction reactionEntity = new Reaction(null, reactionType, reactionSummary, photo);
+                reactionDtoList.add(reactionEntity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
