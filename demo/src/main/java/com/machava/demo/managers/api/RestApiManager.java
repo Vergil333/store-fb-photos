@@ -1,4 +1,4 @@
-package com.machava.demo.managers;
+package com.machava.demo.managers.api;
 
 import java.util.List;
 
@@ -19,8 +19,10 @@ public class RestApiManager {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    FbApi fbApi;
 
-    public static void checkUserAgainstToken(Long userId, Long tokenUserId) {
+    private static void checkUserAgainstToken(Long userId, Long tokenUserId) {
         if (!tokenUserId.equals(userId)) {
             throw new IllegalArgumentException("Given token does not belong to given FB ID" +
                     "\nUser's Id of Token: " + userId +
@@ -28,23 +30,23 @@ public class RestApiManager {
         }
     }
 
-    public static List<Photo> getPhotos(String token, User user) throws Exception {
-        List<Photo> photoList = FbApi.getUserPhotos(token);
+    private List<Photo> getPhotos(String token, User user) throws Exception {
+        List<Photo> photoList = fbApi.getUserPhotos(token);
         photoList.forEach(photo -> photo.setUser(user));
 
         return photoList;
     }
 
-    public static User createUserEntity(ApiTemplateDto apiTemplateDto) throws Exception {
+    public User createUserEntity(ApiTemplateDto apiTemplateDto) throws Exception {
         Long givenId = apiTemplateDto.getId();
         String givenAccessToken = apiTemplateDto.getAccessToken();
 
-        User user = FbApi.getUserDetails(givenAccessToken);
+        User user = fbApi.getUserDetails(givenAccessToken);
 
-        RestApiManager.checkUserAgainstToken(user.getId(), givenId);
+        checkUserAgainstToken(user.getId(), givenId);
 
         // now let's get photos
-        user.setPhotos(RestApiManager.getPhotos(givenAccessToken, user));
+        user.setPhotos(getPhotos(givenAccessToken, user));
 
         return user;
     }

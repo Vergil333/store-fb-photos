@@ -1,14 +1,9 @@
-package com.machava.demo.managers;
+package com.machava.demo.managers.api;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.imageio.ImageIO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,6 +14,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.machava.demo.entities.Photo;
 import com.machava.demo.entities.Reaction;
 import com.machava.demo.enums.EReactionType;
+import com.machava.demo.managers.FbException;
+import com.machava.demo.managers.repository.ReactionRepositoryManager;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
@@ -32,19 +29,9 @@ public class FbApiManager {
 
     public static String apiUrl = "https://graph.facebook.com/v3.3/";
 
-    public static byte[] convertImageToByte(String imageUrl) {
-        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            BufferedImage originalImage = ImageIO.read(new URL(imageUrl));
-            ImageIO.write(originalImage, "jpg", baos);
-            baos.flush();
-            return baos.toByteArray();
-        } catch (IOException e) {
-            throw new IllegalArgumentException("Could not download image: " + e +
-                    "Given url: " + imageUrl);
-        }
-    }
+    private ReactionRepositoryManager reactionRepositoryManager;
 
-    public static List<Photo> mapPhotoResponseToList(JSONObject responseObject, String fbToken) {
+    public List<Photo> mapPhotoResponseToList(JSONObject responseObject, String fbToken) {
         List<Photo> photoList = new ArrayList<>();
         JSONArray responseDataArray = responseObject.getJSONArray("data");
 
@@ -63,22 +50,25 @@ public class FbApiManager {
         return photoList;
     }
 
-    private static List<Reaction> getPhotoReactions(String fbToken, Photo photo) {
+    private List<Reaction> getPhotoReactions(String fbToken, Photo photo) {
 
-        List<Reaction> reactionDtoList = new ArrayList<>();
+        List<Reaction> reactionList = new ArrayList<>();
 
         List<EReactionType> eReactionTypesList = Arrays.asList(EReactionType.values());
         eReactionTypesList.forEach(reactionType -> {
             try {
                 Long reactionSummary = getReactionSummary(fbToken, photo.getId(), reactionType);
-                Reaction reactionEntity = new Reaction(null, reactionType, reactionSummary, photo);
-                reactionDtoList.add(reactionEntity);
+
+                Reaction reactionEntity = reactionRepositoryManager.getReactionIfExists(reactionType, photo);
+                reactionEntity.setSummary(reactionSummary);
+
+                reactionList.add(reactionEntity);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
-        return reactionDtoList;
+        return reactionList;
     }
 
     private static Long getReactionSummary(String fbToken, Long photoId, EReactionType reactionType) throws Exception {

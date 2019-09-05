@@ -18,7 +18,7 @@ import com.machava.demo.dtos.ApiTemplateDto;
 import com.machava.demo.dtos.PhotoDto;
 import com.machava.demo.entities.Photo;
 import com.machava.demo.entities.User;
-import com.machava.demo.managers.RestApiManager;
+import com.machava.demo.managers.api.RestApiManager;
 import com.machava.demo.repository.PhotoRepository;
 import com.machava.demo.repository.UserRepository;
 
@@ -30,6 +30,8 @@ public class RestApi {
     private UserRepository userRepository;
     @Autowired
     private PhotoRepository photoRepository;
+    @Autowired
+    private RestApiManager restApiManager;
 
     @PostMapping(value = "users")
     public ResponseEntity<?> storeUserAndPhotos(@RequestBody ApiTemplateDto apiTemplateDto) throws Exception {
@@ -38,7 +40,7 @@ public class RestApi {
             throw new IllegalArgumentException("Invalid request body!");
         }
 
-        User user = RestApiManager.createUserEntity(apiTemplateDto);
+        User user = restApiManager.createUserEntity(apiTemplateDto);
         boolean isNew = !userRepository.existsById(apiTemplateDto.getId());
 
         userRepository.save(user);

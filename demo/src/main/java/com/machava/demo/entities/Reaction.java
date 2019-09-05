@@ -6,6 +6,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -25,10 +27,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @DynamicUpdate
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"type", "photo_id"}))
 public class Reaction {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue()
     private Long id;
     @Enumerated(EnumType.STRING)
     private EReactionType type;
