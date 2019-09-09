@@ -1,27 +1,27 @@
 <!DOCTYPE HTML>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>Store fb photos of you!</title>
+    <title>Landing page</title>
 
+    <link th:replace="fragments/dependencies :: bootstrap-css">
 </head>
-
+<script src="js/fb-init.js"></script>
 <body>
-<script th:replace="fragments/scripts :: fb-sign-in"></script>
 
-<!-- Javascript SDK -->
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=1344964768940939&autoLogAppEvents=1"></script>
+    <!-- Javascript SDK -->
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=1344964768940939&autoLogAppEvents=1"></script>
 
-<fb:login-button scope="public_profile,email,user_photos" onlogin="checkLoginState();">
-</fb:login-button>
+    <fb:login-button scope="public_profile,email,user_photos,user_gender" onlogin="checkLoginState();">
+    </fb:login-button>
 
-<div id="status"></div>
+    <div id="status"></div>
 
+    <script th:replace="fragments/dependencies :: bootstrap-scripts"></script>
+    <script src="js/fb-logic.js"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-<script src="js/fb-logic.js"></script>
 </body>
 </html>

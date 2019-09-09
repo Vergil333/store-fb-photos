@@ -65,8 +65,7 @@ public class RestApi {
 
     @GetMapping(value = "users/{id}/photos")
     public ResponseEntity<?> getUserPhotos(@PathVariable Long id) {
-        User user = userRepository.findFirstById(id);
-        List<Photo> photoList = photoRepository.findAllByUser(user);
+        List<Photo> photoList = photoRepository.findAllByUserId(id);
 
         if (photoList == null) {
             return new ResponseEntity<>("User with given id (" + id + ") is not stored in DB.", HttpStatus.NOT_FOUND);

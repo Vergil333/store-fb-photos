@@ -2,30 +2,45 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <title>Your photos</title>
 
-    <script crossorigin="anonymous"
-            integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
-            src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/my-style.css">
+    <link th:replace="fragments/dependencies :: bootstrap-css">
 </head>
-<script src="js/fb-init.js"></script>
 <body>
 
-    <a href="/h2-console" target="_blank">H2 console</a>
-    <br>
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <p th:text="'FB ID: ' + ${user.id}"></p>
+        </div>
+        <div class="row justify-content-md-center">
+            <img th:src="${user.picture}" class="profile-picture">
+        </div>
+        <div class="row justify-content-md-center">
+            <p th:text="'Name: ' + ${user.name}"></p>
+        </div>
+        <div class="row justify-content-md-center">
+            <p th:text="'Sex: : ' + ${user.gender}"></p>
+        </div>
 
-    <p th:text="'Token: ' + ${fbToken}"></p>
-    <p th:text="'Token is fine: ' + ${isTokenValid.booleanValue()}"></p>
-    <p th:text="'userDto.id: ' + ${userDto.getFbId()}"></p>
-    <p th:text="'userDto.name: ' + ${userDto.getName()}"></p>
-    <p th:text="'userDto.gender: ' + ${userDto.getGender()}"></p>
-    <img th:src="${userDto.getPicture()}">
+        <div class="row justify-content-md-center">
 
-    <button id="login">Login with Facebook</button>
-    <button style="display:none;" id="logout">Logout</button>
-    <div id="status"></div>
+            <div th:each="photo: ${photos}" class="col-sm">
+                <section>
+                    <a th:href="${photo.link}" title="Redirect to Facebook">
+                        <img th:src="${photo.picture}">
+                    </a>
+                </section>
+                <section th:each="reaction: ${photo.reactions}">
+                        <img th:src="'images/reactions/' + ${reaction.type} + '.png'"
+                             th:text="${reaction.summary}">
+                </section>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-    <script src="js/fb-logic.js"></script>
+    <script th:replace="fragments/dependencies :: bootstrap-scripts"></script>
 </body>
 </html>

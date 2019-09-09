@@ -1,13 +1,10 @@
 package com.machava.demo.managers.api;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.machava.demo.controllers.FbApi;
 import com.machava.demo.dtos.ApiTemplateDto;
-import com.machava.demo.entities.Photo;
 import com.machava.demo.entities.User;
 import com.machava.demo.repository.UserRepository;
 
@@ -30,13 +27,6 @@ public class RestApiManager {
         }
     }
 
-    private List<Photo> getPhotos(String token, User user) throws Exception {
-        List<Photo> photoList = fbApi.getUserPhotos(token);
-        photoList.forEach(photo -> photo.setUser(user));
-
-        return photoList;
-    }
-
     public User createUserEntity(ApiTemplateDto apiTemplateDto) throws Exception {
         Long givenId = apiTemplateDto.getId();
         String givenAccessToken = apiTemplateDto.getAccessToken();
@@ -46,7 +36,7 @@ public class RestApiManager {
         checkUserAgainstToken(user.getId(), givenId);
 
         // now let's get photos
-        user.setPhotos(getPhotos(givenAccessToken, user));
+        user.setPhotos(fbApi.getPhotos(givenAccessToken, user));
 
         return user;
     }

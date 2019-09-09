@@ -13,6 +13,15 @@ function facebookLogin()
     });
 }
 
+// This function is called when someone finishes with the Login
+    // Button.  See the onlogin handler attached to it in the sample
+    // code below.
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
 function statusChangeCallback(response)
 {
     console.log(response);
@@ -32,7 +41,7 @@ function facebookLoginByDialog()
 {
     FB.login(function(response) {
         statusChangeCallback(response);
-    }, {scope: 'public_profile,email,user_photos'});
+    }, {scope: 'public_profile,user_photos,user_gender,email'});
 }
 
 function fetchUserProfile()
@@ -42,12 +51,12 @@ function fetchUserProfile()
         console.log(response);
         console.log('Successful login for: ' + response.name);
         var clientToken = FB.getAuthResponse()['accessToken'];
-        var profile = `<h1>Welcome ${response.name}<h1>
+        var debugProfile = `<h1>Welcome ${response.name}<h1>
                           <h2>Your email is ${response.email}</h2>
                           <h3>Your Birthday is ${response.birthday}</h3>
                           <h3>Your Access Token is ${clientToken}</h3>
                           <p>Redirecting...</p>`;
-        $("#status").append(profile);
+        $("#status").append("Authentication successful! After photos are stored you will be redirected to your dashboard. Working...");
         if(typeof clientToken !== "undefined") {
             window.location.href = "/photos?fbToken=" + clientToken;
         } else {

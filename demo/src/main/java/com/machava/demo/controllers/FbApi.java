@@ -28,6 +28,10 @@ public class FbApi {
 
     public String verifyToken(String fbToken) {
 
+        if (fbToken == null || fbToken.equals("")) {
+            return "FB token cannot be empty.";
+        }
+
         List<String> requiredPermissionsList = List.of("public_profile","user_photos","user_gender","email");
 
         HttpResponse<JsonNode> response = null;
@@ -39,6 +43,11 @@ public class FbApi {
                     .asJson();
         } catch (UnirestException e) {
             e.printStackTrace();
+        }
+
+        if (response.getBody().getObject().has("error")) {
+            return "Response code: " + response.getStatusText() +
+                    "FB error says: " + response.getBody().getObject().getJSONObject("error").getString("message");
         }
 
         JSONObject responseObject = response.getBody().getObject().getJSONObject("data");
@@ -53,10 +62,7 @@ public class FbApi {
 
         boolean permissions = scopesList.containsAll(requiredPermissionsList);
 
-        if (response.getBody().getObject().has("error")) {
-            return "Response code: " + response.getStatusText() +
-                    "FB error says: " + response.getBody().getObject().getJSONObject("error").getString("message");
-        } else if (!isTokenValid) {
+        if (!isTokenValid) {
             return "Token is invalid";
         } else if (responseObject.has("error")) {
             return "FB error says: " + responseObject.getJSONObject("error").getString("message");
@@ -104,6 +110,13 @@ public class FbApi {
         }
 
         return user;
+    }
+
+    public List<Photo> getPhotos(String token, User user) throws Exception {
+        List<Photo> photoList = getUserPhotos(token);
+        photoList.forEach(photo -> photo.setUser(user));
+
+        return photoList;
     }
 
     public List<Photo> getUserPhotos(String fbToken) throws Exception {
