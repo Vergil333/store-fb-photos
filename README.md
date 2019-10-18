@@ -11,14 +11,17 @@ password: password
 
 
 What I used:  
-Spring boot (security, web, thymeleaf, test, crud)  
-Lombok  
-FB JavaScript SDK  
-Hibernate (in-memory H2 database)
+- Spring boot (security, web, thymeleaf, test, crud)  
+- Lombok  
+- FB JavaScript SDK  
+- Hibernate (in-memory H2 database)
 
-H2 database:  
+**H2 database:**  
 link: https://localhost:8090/h2-console/    
 user: SA  
 password: {empty}  
 
-FB Javascript SDK requires website to be secured (HTTPS) so you have to create your self-signed certificate and place localhost.p12 into /resources folder (or disable security for whole project as I did for h2 console).
+**FB Javascript SDK** requires website to be secured (HTTPS) so you have to import
+self-signed certificate into your browser.  
+Cert location: /resources/localhost.p12  
+Cert password: changeit
