@@ -25,18 +25,23 @@
             <p th:text="'Sex: : ' + ${user.gender}"></p>
         </div>
 
-        <div class="row justify-content-md-center">
+    </div>
 
-            <div th:each="photo: ${photos}" class="col-sm">
-                <section>
+    <div class="row justify-content-md-center">
+
+        <div th:each="photo: ${photos}" class="user-photo-frame">
+            <div class="row no-gutters">
+                <div class="col">
                     <a th:href="${photo.link}" title="Redirect to Facebook">
-                        <img th:src="${photo.picture}">
+                        <img class="user-photo" th:src="${photo.picture}">
                     </a>
-                </section>
-                <section th:each="reaction: ${photo.reactions}">
-                        <img th:src="'images/reactions/' + ${reaction.type} + '.png'"
+                </div>
+                <div class="col">
+                    <div class="row-sm" th:each="reaction: ${photo.reactions}">
+                        <img class="reaction-icon" th:src="'images/reactions/' + ${reaction.type} + '.png'"
                              th:text="${reaction.summary}">
-                </section>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

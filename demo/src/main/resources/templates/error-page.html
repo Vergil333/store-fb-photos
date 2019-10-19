@@ -8,9 +8,12 @@
 
     <link th:replace="fragments/dependencies :: bootstrap-css">
 </head>
+<script src="js/fb-init.js"></script>
 <body>
 
 <p th:text="'Error: ' + ${tokenError}"></p>
+
+<th:block th:replace="fragments/fb-login :: fb-login-button"></th:block>
 
 <script th:replace="fragments/dependencies :: bootstrap-scripts"></script>
 </body>

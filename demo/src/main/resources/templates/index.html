@@ -11,17 +11,7 @@
 <script src="js/fb-init.js"></script>
 <body>
 
-    <!-- Javascript SDK -->
-    <div id="fb-root"></div>
-    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=1344964768940939&autoLogAppEvents=1"></script>
-
-    <fb:login-button scope="public_profile,email,user_photos,user_gender" onlogin="checkLoginState();">
-    </fb:login-button>
-
-    <div id="status"></div>
-
-    <script th:replace="fragments/dependencies :: bootstrap-scripts"></script>
-    <script src="js/fb-logic.js"></script>
+    <th:block th:replace="fragments/fb-login :: fb-login-button"></th:block>
 
 </body>
 </html>

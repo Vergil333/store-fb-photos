@@ -1,3 +1,15 @@
 .profile-picture {
     width: 200px;
 }
+
+.reaction-icon {
+    height: 16px;
+}
+
+.user-photo-frame {
+    padding-right: 30px;
+}
+
+.user-photo {
+    height: 143px;
+}
